@@ -1,14 +1,1 @@
-@import "tailwindcss";
-@import "tailwindcss/theme";
-
-* {
-  @apply border-border outline-ring/50;
-}
-
-body {
-  @apply bg-background text-foreground;
-}
-
-input:focus {
-  @apply outline-ring/50;
-}
+@import "./styles/globals.css";
