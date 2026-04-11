@@ -1,7 +1,7 @@
 import type { Movie, OmdbSearchResponse } from "@/types";
 
 function getOmdbEndpoint(): string {
-  const url = import.meta.env.BUN_PUBLIC_OMDB_ENDPOINT;
+  const url = process.env.BUN_PUBLIC_OMDB_ENDPOINT;
   if (!url?.trim()) {
     throw new Error(
       "Missing BUN_PUBLIC_OMDB_ENDPOINT. Copy .env.example to .env and set it (e.g. https://www.omdbapi.com).",
@@ -11,7 +11,7 @@ function getOmdbEndpoint(): string {
 }
 
 function getOmdbApiKey(): string {
-  const key = import.meta.env.BUN_PUBLIC_OMDB_API_KEY;
+  const key = process.env.BUN_PUBLIC_OMDB_API_KEY;
   if (!key?.trim()) {
     throw new Error(
       "Missing BUN_PUBLIC_OMDB_API_KEY. Copy .env.example to .env and set it.",

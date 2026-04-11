@@ -1,7 +1,7 @@
 import type { GitHubSearchResponse, Repository } from "@/types";
 
 function getGithubEndpoint(): string {
-  const url = import.meta.env.BUN_PUBLIC_GITHUB_ENDPOINT;
+  const url = process.env.BUN_PUBLIC_GITHUB_ENDPOINT;
   if (!url?.trim()) {
     throw new Error(
       "Missing BUN_PUBLIC_GITHUB_ENDPOINT. Copy .env.example to .env and set it.",
@@ -11,7 +11,7 @@ function getGithubEndpoint(): string {
 }
 
 function getGithubPat(): string | undefined {
-  const pat = import.meta.env.BUN_PUBLIC_GITHUB_PAT;
+  const pat = process.env.BUN_PUBLIC_GITHUB_PAT;
   return pat?.trim() || undefined;
 }
 
@@ -52,7 +52,9 @@ export async function searchRepositories(
 
   const data: GitHubSearchResponse = await response.json();
 
-  const repositories: Repository[] = data.items.map((item) => ({
+  const items = data.items ?? [];
+
+  const repositories: Repository[] = items.map((item) => ({
     id: item.id,
     source: "repository",
     title: item.full_name,
@@ -72,6 +74,6 @@ export async function searchRepositories(
 
   return {
     repositories,
-    totalCount: data.total_count,
+    totalCount: data.total_count ?? repositories.length,
   };
 }

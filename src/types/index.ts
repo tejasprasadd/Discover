@@ -1,5 +1,5 @@
 /** URL / UI tab identifiers for discovery (kept in sync with `?tab=`). */
-export const DISCOVERY_TAB_VALUES = ["repositories", "movies"] as const;
+export const DISCOVERY_TAB_VALUES = ["repositories", "movies", "users"] as const;
 export type DiscoveryTab = (typeof DISCOVERY_TAB_VALUES)[number];
 export const DEFAULT_DISCOVERY_TAB: DiscoveryTab = "repositories";
 
@@ -31,6 +31,14 @@ export interface Movie extends SearchResult {
   releaseDate: string;
   overview: string;
   popularity: number;
+}
+
+export interface User extends SearchResult {
+  source: "user";
+  username: string;
+  location: string;
+  email: string;
+  phone: string;
 }
 
 export interface GitHubSearchResponse {

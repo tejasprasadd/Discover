@@ -33,7 +33,7 @@ export const SpotlightSearchBar = forwardRef(function SpotlightSearchBar(
     onValueChange,
     onSubmitSearch,
     id = "spotlight-search",
-    placeholder = "Search repositories and movies…",
+    placeholder = "Search repos, movies, or names…",
     disabled = false,
     isBusy = false,
     className,

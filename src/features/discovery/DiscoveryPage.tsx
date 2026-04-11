@@ -2,10 +2,13 @@ import { useRef } from "react";
 
 import { AppShell } from "@/components/layout/AppShell";
 import { PageSection } from "@/components/layout/PageSection";
-import { DiscoveryPlaceholderPanel } from "@/features/discovery/components/DiscoveryPlaceholderPanel";
 import { DiscoveryTabsPanel } from "@/features/discovery/components/DiscoveryTabsPanel";
+import { MovieResultsPanel } from "@/features/discovery/components/MovieResultsPanel";
+import { RepositoryResultsPanel } from "@/features/discovery/components/RepositoryResultsPanel";
+import { UserResultsPanel } from "@/features/discovery/components/UserResultsPanel";
 import { SpotlightSearchBar } from "@/features/search/components/SpotlightSearchBar";
 import { useDiscoverySearchState } from "@/hooks/useDiscoverySearchState";
+import { useDiscoverySourceQueries } from "@/hooks/useDiscoverySourceQueries";
 import { useSpotlightFocusShortcut } from "@/hooks/useSpotlightFocusShortcut";
 
 export function DiscoveryPage() {
@@ -22,6 +25,7 @@ export function DiscoveryPage() {
   } = useDiscoverySearchState();
 
   const hasQuery = committedQuery.length > 0;
+  const queries = useDiscoverySourceQueries(committedQuery);
 
   return (
     <div className="relative min-h-screen">
@@ -46,8 +50,8 @@ export function DiscoveryPage() {
                 Search once. Browse everything.
               </h1>
               <p className="mt-3 max-w-lg text-pretty text-sm leading-relaxed text-muted-foreground sm:text-base">
-                A single query drives repositories and movies. Your search and tab live in the URL — shareable,
-                reloadable, and aligned with the product PRD.
+                GitHub repositories, OMDb movies, and Random User profiles — one query, URL-synced state, and
+                per-tab caching so switching tabs keeps your results.
               </p>
               <div className="mt-10 w-full">
                 <SpotlightSearchBar
@@ -66,17 +70,24 @@ export function DiscoveryPage() {
             activeTab={tab}
             onTabChange={setTab}
             repositoriesPanel={
-              <DiscoveryPlaceholderPanel
-                variant={hasQuery ? "ready" : "idle"}
+              <RepositoryResultsPanel
+                hasQuery={hasQuery}
                 committedQuery={committedQuery}
-                sourceLabel="Repository"
+                query={queries.repositories}
               />
             }
             moviesPanel={
-              <DiscoveryPlaceholderPanel
-                variant={hasQuery ? "ready" : "idle"}
+              <MovieResultsPanel
+                hasQuery={hasQuery}
                 committedQuery={committedQuery}
-                sourceLabel="Movie"
+                query={queries.movies}
+              />
+            }
+            usersPanel={
+              <UserResultsPanel
+                hasQuery={hasQuery}
+                committedQuery={committedQuery}
+                query={queries.users}
               />
             }
           />
