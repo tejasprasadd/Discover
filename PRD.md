@@ -117,7 +117,7 @@ A developer or product designer exploring a reference implementation for a multi
 2. Movies
 3. Users
 
-The app must use at least two APIs. The recommended baseline is GitHub REST API and TMDB API. Random User API may be included as a third optional source.
+The app must use at least two APIs. The recommended baseline is GitHub REST API and OMDB API. Random User API may be included as a third optional source.
 
 ---
 
@@ -256,7 +256,7 @@ The app must use at least two APIs. The recommended baseline is GitHub REST API 
 The app must integrate with at least two of the following:
 
 1. GitHub REST API
-2. TMDB API
+2. OMDB API
 3. Random User API
 
 ### 9.2 Recommended Baseline Integration
@@ -267,7 +267,7 @@ The app must integrate with at least two of the following:
 - Display stars, forks, and description.
 - Support pagination or load more.
 
-**TMDB API**
+**OMDB API**
 
 - Search movies.
 - Display poster, rating, and overview.
@@ -403,7 +403,7 @@ The exact structure may evolve, but the codebase should remain organized in this
 - `src/features/search/` for search input, query state, and orchestration
 - `src/features/tabs/` for tab shell and tab state
 - `src/features/repositories/` for GitHub integration and repository UI
-- `src/features/movies/` for TMDB integration and movie UI
+- `src/features/movies/` for OMDB integration and movie UI
 - `src/features/users/` for optional user integration
 - `src/hooks/` for reusable custom hooks
 - `src/lib/` for utilities, formatting, query client, and helpers
@@ -499,7 +499,7 @@ Example conceptual fields:
 
 ### 15.3 Normalization Requirement
 
-The UI should not directly depend on raw GitHub or TMDB response objects. Data should be mapped into typed app models so component logic stays clean and predictable.
+The UI should not directly depend on raw GitHub or OMDB response objects. Data should be mapped into typed app models so component logic stays clean and predictable.
 
 ---
 
@@ -631,7 +631,7 @@ Because this is an assignment-style product, success should be measured by imple
 ### Phase 2: Data Integration
 
 1. Implement GitHub search.
-2. Implement TMDB search.
+2. Implement OMDB search.
 3. Optionally add Random User integration.
 4. Normalize provider responses.
 5. Cache and preserve per-tab data.
@@ -727,7 +727,7 @@ Recommended next steps for engineering:
 
 1. User lands on the page and sees the search bar and tabs.
 2. User types `react` and submits the query.
-3. GitHub repositories, TMDB movies, and optional users fetch in parallel or on demand.
+3. GitHub repositories, OMDB movies, and optional users fetch in parallel or on demand.
 4. Each tab shows its own loading state and later its own results.
 5. User switches tabs and sees previously fetched data persist.
 6. User clicks a movie card and opens a detail modal with richer information.
