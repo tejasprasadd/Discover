@@ -50,17 +50,18 @@ export interface GitHubSearchResponse {
   total_count: number;
 }
 
-export interface TMDBSearchResponse {
-  results: Array<{
-    id: number;
-    title: string;
-    poster_path?: string | null;
-    vote_average: number;
-    release_date: string;
-    overview: string;
-    popularity: number;
+/** Raw OMDB search payload (`s=`). */
+export interface OmdbSearchResponse {
+  Search?: Array<{
+    Title: string;
+    Year: string;
+    imdbID: string;
+    Type: string;
+    Poster: string;
   }>;
-  total_results: number;
+  totalResults?: string;
+  Response: string;
+  Error?: string;
 }
 
 export interface QueryState {

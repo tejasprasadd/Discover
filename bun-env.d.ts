@@ -4,8 +4,8 @@
 interface ImportMetaEnv {
   readonly BUN_PUBLIC_GITHUB_ENDPOINT?: string;
   readonly BUN_PUBLIC_GITHUB_PAT?: string;
-  readonly BUN_PUBLIC_TMDB_ENDPOINT?: string;
-  readonly BUN_PUBLIC_TMDB_API_KEY?: string;
+  readonly BUN_PUBLIC_OMDB_ENDPOINT?: string;
+  readonly BUN_PUBLIC_OMDB_API_KEY?: string;
 }
 
 interface ImportMeta {
