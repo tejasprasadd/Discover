@@ -1,19 +1,42 @@
-import type { UseQueryResult } from "@tanstack/react-query";
-import { AlertCircle } from "lucide-react";
+import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { useMemo } from "react";
 
 import { UserCard } from "@/features/users/components/UserCard";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import type { User } from "@/types";
+import type { DiscoveryDetailSelection, User } from "@/types";
 
 import { DiscoveryPlaceholderPanel } from "./DiscoveryPlaceholderPanel";
 
-type UserQuery = UseQueryResult<{ users: User[]; totalCount: number }, Error>;
+type UserPage = { users: User[]; totalCount: number };
+type UserInfinite = UseInfiniteQueryResult<InfiniteData<UserPage, unknown>, Error>;
+
+function dedupeUsers(pages: UserPage[]): User[] {
+  const seen = new Set<string>();
+  const out: User[] = [];
+  for (const p of pages) {
+    for (const u of p.users) {
+      const k = String(u.id);
+      if (!seen.has(k)) {
+        seen.add(k);
+        out.push(u);
+      }
+    }
+  }
+  return out;
+}
 
 function GridSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      role="status"
+      aria-live="polite"
+      aria-busy
+    >
+      <span className="sr-only">Loading users</span>
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="flex gap-3 rounded-xl border border-border/60 bg-card p-4">
           <Skeleton className="size-14 shrink-0 rounded-full" />
@@ -32,11 +55,18 @@ export function UserResultsPanel({
   hasQuery,
   committedQuery,
   query,
+  onOpenDetail,
 }: {
   hasQuery: boolean;
   committedQuery: string;
-  query: UserQuery;
+  query: UserInfinite;
+  onOpenDetail: (selection: DiscoveryDetailSelection) => void;
 }) {
+  const list = useMemo(
+    () => (query.data?.pages ? dedupeUsers(query.data.pages) : []),
+    [query.data?.pages],
+  );
+
   if (!hasQuery) {
     return (
       <DiscoveryPlaceholderPanel
@@ -53,7 +83,7 @@ export function UserResultsPanel({
 
   if (query.isError) {
     return (
-      <Alert variant="destructive">
+      <Alert variant="destructive" role="alert">
         <AlertCircle className="size-4" />
         <AlertTitle>Could not load users</AlertTitle>
         <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -66,29 +96,105 @@ export function UserResultsPanel({
     );
   }
 
-  const list = query.data?.users ?? [];
-  if (list.length === 0) {
+  if (list.length === 0 && !query.hasNextPage) {
     return (
-      <p className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-8 text-center text-sm text-muted-foreground">
-        No generated users matched &quot;{committedQuery}&quot; in this batch.{" "}
-        <a
-          href="https://randomuser.me/documentation"
-          className="text-primary underline-offset-4 hover:underline"
-          target="_blank"
-          rel="noreferrer"
+      <div
+        className="rounded-lg border border-dashed border-border bg-muted/30 px-4 py-10 text-center"
+        role="status"
+      >
+        <p className="text-sm font-medium text-foreground">No matching profiles</p>
+        <p className="mt-2 text-pretty text-sm text-muted-foreground">
+          Random User returns synthetic names — try a short first or last name (e.g. &quot;john&quot;, &quot;anna&quot;).
+        </p>
+        <p className="mt-3 text-xs text-muted-foreground">
+          <a
+            href="https://randomuser.me/documentation"
+            className="text-primary underline-offset-4 hover:underline"
+            target="_blank"
+            rel="noreferrer"
+          >
+            API documentation
+          </a>
+        </p>
+      </div>
+    );
+  }
+
+  if (list.length === 0 && query.hasNextPage) {
+    return (
+      <div className="flex flex-col items-center gap-4 rounded-lg border border-dashed border-border bg-muted/20 px-4 py-10 text-center">
+        <div role="status">
+          <p className="text-sm font-medium text-foreground">No matches in this batch</p>
+          <p className="mt-2 max-w-md text-pretty text-sm text-muted-foreground">
+            Try loading another batch of random profiles, or refine your search term.
+          </p>
+        </div>
+        <Button
+          type="button"
+          variant="default"
+          size="sm"
+          className="min-w-[200px]"
+          onClick={() => query.fetchNextPage()}
+          disabled={query.isFetchingNextPage}
         >
-          Random User
-        </a>{" "}
-        returns synthetic names — try a short first or last name (e.g. &quot;john&quot;, &quot;anna&quot;).
-      </p>
+          {query.isFetchingNextPage ? (
+            <>
+              <Loader2 className="size-4 animate-spin" aria-hidden />
+              Loading…
+            </>
+          ) : (
+            "Load another batch"
+          )}
+        </Button>
+      </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {list.map((user) => (
-        <UserCard key={String(user.id)} user={user} />
-      ))}
+    <div className="space-y-6">
+      <p className="text-center text-xs text-muted-foreground md:text-left">
+        {list.length} unique profile{list.length === 1 ? "" : "s"} matching &quot;{committedQuery}&quot;
+      </p>
+
+      <div
+        className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        role="list"
+        aria-label="User search results"
+      >
+        {list.map((user) => (
+          <div key={String(user.id)} role="listitem">
+            <UserCard
+              user={user}
+              onSelect={() => onOpenDetail({ source: "user", item: user })}
+            />
+          </div>
+        ))}
+      </div>
+
+      {query.hasNextPage ? (
+        <div className="flex flex-col items-center gap-2 pt-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="min-w-[200px]"
+            onClick={() => query.fetchNextPage()}
+            disabled={query.isFetchingNextPage}
+          >
+            {query.isFetchingNextPage ? (
+              <>
+                <Loader2 className="size-4 animate-spin" aria-hidden />
+                Loading…
+              </>
+            ) : (
+              "Load more profiles"
+            )}
+          </Button>
+          <p className="max-w-md text-center text-[11px] text-muted-foreground">
+            Each batch fetches new random profiles; matches are filtered client-side.
+          </p>
+        </div>
+      ) : null}
     </div>
   );
 }

@@ -49,23 +49,19 @@ export function DiscoveryPlaceholderPanel({
         </div>
         <CardDescription className="text-pretty">
           {idle
-            ? "Enter a term above and press Search (or pause typing — your query syncs to the URL after a short delay)."
-            : `Query “${committedQuery}” is saved in the URL. Hook up ${sourceLabel.toLowerCase()} fetching here — tab state is preserved when you switch away.`}
+            ? "Enter a term above and press Enter to search. Your query syncs to the URL after a short pause while typing."
+            : `Results for “${committedQuery}” appear here once loaded. Switch tabs anytime — each source keeps its own cache.`}
         </CardDescription>
       </CardHeader>
       <CardContent className="text-sm text-muted-foreground">
         {idle ? (
           <p>
-            The address bar uses <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?q=</code>{" "}
-            and optional{" "}
-            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?tab=</code> so you can share
-            or reload this page.
+            The URL uses <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?q=</code> and{" "}
+            <code className="rounded bg-muted px-1.5 py-0.5 text-xs">?tab=</code> so you can share or
+            bookmark a search.
           </p>
         ) : (
-          <p>
-            Active tab and query are driven by the URL — switching tabs does not clear your search
-            string.
-          </p>
+          <p>Use the tabs above to compare GitHub repos, OMDb movies, and Random User profiles for the same query.</p>
         )}
       </CardContent>
     </Card>

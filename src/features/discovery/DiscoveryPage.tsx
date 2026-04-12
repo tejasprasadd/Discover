@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { AppShell } from "@/components/layout/AppShell";
 import { PageSection } from "@/components/layout/PageSection";
+import { DiscoveryDetailDialog } from "@/features/discovery/components/DiscoveryDetailDialog";
 import { DiscoveryTabsPanel } from "@/features/discovery/components/DiscoveryTabsPanel";
 import { MovieResultsPanel } from "@/features/discovery/components/MovieResultsPanel";
 import { RepositoryResultsPanel } from "@/features/discovery/components/RepositoryResultsPanel";
@@ -10,10 +11,13 @@ import { SpotlightSearchBar } from "@/features/search/components/SpotlightSearch
 import { useDiscoverySearchState } from "@/hooks/useDiscoverySearchState";
 import { useDiscoverySourceQueries } from "@/hooks/useDiscoverySourceQueries";
 import { useSpotlightFocusShortcut } from "@/hooks/useSpotlightFocusShortcut";
+import type { DiscoveryDetailSelection } from "@/types";
 
 export function DiscoveryPage() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   useSpotlightFocusShortcut(searchInputRef);
+
+  const [detailSelection, setDetailSelection] = useState<DiscoveryDetailSelection | null>(null);
 
   const {
     draft,
@@ -26,6 +30,12 @@ export function DiscoveryPage() {
 
   const hasQuery = committedQuery.length > 0;
   const queries = useDiscoverySourceQueries(committedQuery);
+
+  const searchBusy =
+    hasQuery &&
+    (queries.repositories.isPending ||
+      queries.movies.isPending ||
+      queries.users.isPending);
 
   return (
     <div className="relative min-h-screen">
@@ -59,6 +69,7 @@ export function DiscoveryPage() {
                   value={draft}
                   onValueChange={setDraft}
                   onSubmitSearch={commitSearchNow}
+                  isBusy={searchBusy}
                 />
               </div>
             </div>
@@ -74,6 +85,7 @@ export function DiscoveryPage() {
                 hasQuery={hasQuery}
                 committedQuery={committedQuery}
                 query={queries.repositories}
+                onOpenDetail={setDetailSelection}
               />
             }
             moviesPanel={
@@ -81,6 +93,7 @@ export function DiscoveryPage() {
                 hasQuery={hasQuery}
                 committedQuery={committedQuery}
                 query={queries.movies}
+                onOpenDetail={setDetailSelection}
               />
             }
             usersPanel={
@@ -88,11 +101,17 @@ export function DiscoveryPage() {
                 hasQuery={hasQuery}
                 committedQuery={committedQuery}
                 query={queries.users}
+                onOpenDetail={setDetailSelection}
               />
             }
           />
         </PageSection>
       </AppShell>
+
+      <DiscoveryDetailDialog
+        selection={detailSelection}
+        onClose={() => setDetailSelection(null)}
+      />
     </div>
   );
 }

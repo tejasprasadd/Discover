@@ -41,6 +41,12 @@ export interface User extends SearchResult {
   phone: string;
 }
 
+/** Item opened in the discovery detail modal. */
+export type DiscoveryDetailSelection =
+  | { source: "repository"; item: Repository }
+  | { source: "movie"; item: Movie }
+  | { source: "user"; item: User };
+
 export interface GitHubSearchResponse {
   items: Array<{
     id: number;

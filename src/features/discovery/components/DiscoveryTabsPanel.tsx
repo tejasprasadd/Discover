@@ -35,6 +35,7 @@ export function DiscoveryTabsPanel({
       value={activeTab}
       onValueChange={(v) => onTabChange(v as DiscoveryTab)}
       className={cn("flex w-full flex-col gap-6", className)}
+      aria-label="Discovery sources"
     >
       <TabsList
         variant="line"

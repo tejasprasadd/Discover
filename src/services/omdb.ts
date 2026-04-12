@@ -80,3 +80,52 @@ export async function searchMovies(
     totalCount: Number.isFinite(total) ? total : movies.length,
   };
 }
+
+/** OMDb `i=` response — used for detail view (plot, cast, ratings). */
+export type OmdbMovieDetail = {
+  Title: string;
+  Year: string;
+  Rated: string;
+  Released: string;
+  Runtime: string;
+  Genre: string;
+  Director: string;
+  Writer: string;
+  Actors: string;
+  Plot: string;
+  Language: string;
+  Country: string;
+  Poster: string;
+  imdbRating: string;
+  imdbVotes: string;
+  imdbID: string;
+  Type: string;
+  Response: string;
+  Error?: string;
+};
+
+export async function fetchMovieByImdbId(imdbID: string): Promise<OmdbMovieDetail> {
+  if (!imdbID.trim()) {
+    throw new Error("imdbID is required");
+  }
+
+  const params = new URLSearchParams({
+    apikey: getOmdbApiKey(),
+    i: imdbID.trim(),
+    plot: "full",
+  });
+
+  const response = await fetch(`${getOmdbEndpoint()}/?${params}`);
+
+  if (!response.ok) {
+    throw new Error(`OMDB API error: ${response.status} ${response.statusText}`);
+  }
+
+  const data: OmdbMovieDetail = await response.json();
+
+  if (data.Response === "False" || data.Error) {
+    throw new Error(data.Error ?? "Movie not found");
+  }
+
+  return data;
+}

@@ -40,9 +40,11 @@ function nameMatchesQuery(query: string, first: string, last: string): boolean {
 /**
  * Random User Generator has no text search. We fetch a batch and filter by name
  * so the UX still feels like “search” (PRD optional users source).
+ * `page` maps to the API `page` param for load-more batches.
  */
 export async function searchUsers(
   query: string,
+  page: number = 1,
 ): Promise<{ users: User[]; totalCount: number }> {
   if (!query.trim()) {
     throw new Error("Search query cannot be empty");
@@ -50,6 +52,7 @@ export async function searchUsers(
 
   const params = new URLSearchParams({
     results: String(BATCH),
+    page: String(Math.max(1, page)),
     inc: "name,picture,location,email,login,cell",
   });
 
