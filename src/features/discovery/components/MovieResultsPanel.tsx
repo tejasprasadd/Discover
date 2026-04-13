@@ -1,14 +1,13 @@
 import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query";
-import { AlertCircle, Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
 import { MovieCard } from "@/features/movies/components/MovieCard";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { DiscoveryDetailSelection, Movie } from "@/types";
 
+import { DiscoveryLoadMoreButton } from "./DiscoveryLoadMoreButton";
 import { DiscoveryPlaceholderPanel } from "./DiscoveryPlaceholderPanel";
+import { DiscoveryQueryErrorAlert } from "./DiscoveryQueryErrorAlert";
 
 type MoviePage = { movies: Movie[]; totalCount: number };
 type MovieInfinite = UseInfiniteQueryResult<InfiniteData<MoviePage, unknown>, Error>;
@@ -69,16 +68,11 @@ export function MovieResultsPanel({
 
   if (query.isError) {
     return (
-      <Alert variant="destructive" role="alert">
-        <AlertCircle className="size-4" />
-        <AlertTitle>Could not load movies</AlertTitle>
-        <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <span>{query.error.message}</span>
-          <Button type="button" variant="outline" size="sm" onClick={() => query.refetch()}>
-            Retry
-          </Button>
-        </AlertDescription>
-      </Alert>
+      <DiscoveryQueryErrorAlert
+        title="Could not load movies"
+        message={query.error.message}
+        onRetry={() => query.refetch()}
+      />
     );
   }
 
@@ -135,25 +129,11 @@ export function MovieResultsPanel({
       </div>
 
       {query.hasNextPage ? (
-        <div className="flex flex-col items-center gap-2 pt-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="min-w-[200px]"
-            onClick={() => query.fetchNextPage()}
-            disabled={query.isFetchingNextPage}
-          >
-            {query.isFetchingNextPage ? (
-              <>
-                <Loader2 className="size-4 animate-spin" aria-hidden />
-                Loading…
-              </>
-            ) : (
-              "Load more movies"
-            )}
-          </Button>
-        </div>
+        <DiscoveryLoadMoreButton
+          label="Load more movies"
+          isFetching={query.isFetchingNextPage}
+          onFetch={() => query.fetchNextPage()}
+        />
       ) : null}
     </div>
   );
