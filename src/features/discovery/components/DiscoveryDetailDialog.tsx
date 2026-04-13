@@ -238,17 +238,6 @@ function UserDetailBody({
             </li>
           )}
         </ul>
-        <div className="flex flex-wrap gap-2">
-          <Button asChild variant="outline" size="sm">
-            <a href="https://randomuser.me/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
-              About Random User
-              <ExternalLink className="size-3.5" aria-hidden />
-            </a>
-          </Button>
-          <Button type="button" variant="outline" size="sm" onClick={onClose}>
-            Close
-          </Button>
-        </div>
       </div>
     </>
   );
