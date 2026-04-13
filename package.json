@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "bun --hot src/index.ts",
+    "prebuild": "bunx tailwindcss -i ./src/styles/globals.css -o ./src/styles/generated.css --minify",
     "build": "bun build ./src/index.html --outdir=dist --sourcemap --target=browser --minify --define:process.env.NODE_ENV='\"production\"' --env='BUN_PUBLIC_*'",
     "start": "NODE_ENV=production bun src/index.ts"
   },
@@ -25,6 +26,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@tailwindcss/cli": "^4.2.2",
     "@types/bun": "latest",
     "@types/react": "^19",
     "@types/react-dom": "^19",
