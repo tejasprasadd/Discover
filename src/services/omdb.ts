@@ -1,6 +1,6 @@
 import type { Movie, OmdbSearchResponse, OmdbMovieDetail } from "@/types";
-import { getOmdbEndpoint, getOmdbApiKey } from "@/utils/getEndpoints";
-import { http } from "@/lib/http";
+import { getOmdbApiKey } from "@/utils/getEndpoints";
+import { Environment, getAxiosInstance, getParamsWithConfig } from "@/lib/AxiosSetup";
 
 export async function searchMovies(
   query: string,
@@ -17,13 +17,18 @@ export async function searchMovies(
     type: "movie",
   });
 
-  const response = await fetch(`${getOmdbEndpoint()}/?${params}`);
-
-  if (!response.ok) {
-    throw new Error(`OMDB API error: ${response.status} ${response.statusText}`);
+  let data: OmdbSearchResponse;
+  try {
+    const client = getAxiosInstance(Environment.OMDB);
+    const res = await client.get<OmdbSearchResponse>(
+      "/",
+      getParamsWithConfig(params),
+    );
+    data = res.data;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown OMDB API error";
+    throw new Error(`OMDB API error: ${message}`);
   }
-
-  const data: OmdbSearchResponse = await response.json();
 
   if (data.Response === "False" || !data.Search?.length) {
     return {
@@ -76,13 +81,18 @@ export async function fetchMovieByImdbId(imdbID: string): Promise<OmdbMovieDetai
     plot: "full",
   });
 
-  const response = await fetch(`${getOmdbEndpoint()}/?${params}`);
-
-  if (!response.ok) {
-    throw new Error(`OMDB API error: ${response.status} ${response.statusText}`);
+  let data: OmdbMovieDetail;
+  try {
+    const client = getAxiosInstance(Environment.OMDB);
+    const res = await client.get<OmdbMovieDetail>(
+      "/",
+      getParamsWithConfig(params),
+    );
+    data = res.data;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "Unknown OMDB API error";
+    throw new Error(`OMDB API error: ${message}`);
   }
-
-  const data: OmdbMovieDetail = await response.json();
 
   if (data.Response === "False" || data.Error) {
     throw new Error(data.Error ?? "Movie not found");

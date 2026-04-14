@@ -1,6 +1,6 @@
 import type { GitHubSearchResponse, Repository } from "@/types";
-import { getGithubEndpoint, getGithubPat } from "@/utils/getEndpoints";
-import { http } from "@/lib/http";
+import { getGithubPat } from "@/utils/getEndpoints";
+import { Environment, getAxiosInstance, getParamsWithConfig } from "@/lib/AxiosSetup";
 
 export async function searchRepositories(
   query: string,
@@ -19,23 +19,21 @@ export async function searchRepositories(
     order: "desc",
   });
 
-  const headers: HeadersInit = {
+  const pat = getGithubPat();
+  const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
+    ...(pat ? { Authorization: `Bearer ${pat}` } : {}),
   };
-
-  const pat = getGithubPat();
-  if (pat) {
-    (headers as Record<string, string>).Authorization = `Bearer ${pat}`;
-  }
 
   let data: GitHubSearchResponse;
 
   try {
-    const res = await http.get<GitHubSearchResponse>(getGithubEndpoint(), {
-      params: Object.fromEntries(params),
-      headers,
-    });
+    const client = getAxiosInstance(Environment.GITHUB);
+    const res = await client.get<GitHubSearchResponse>(
+      "/search/repositories",
+      getParamsWithConfig(params, headers),
+    );
     data = res.data;
   } catch (e) {
     const message =

@@ -2,6 +2,7 @@ import type { User } from "@/types";
 import { getRandomUserBaseUrl } from "@/utils/getEndpoints";
 import type { RandomUserApiPayload } from "@/types";
 import { BATCH, nameMatchesQuery } from "@/utils/random-user-helpers";
+import { Environment, getAxiosInstance, getParamsWithConfig } from "@/lib/AxiosSetup";
 
 /**
  * Random User Generator has no text search. We fetch a batch and filter by name
@@ -22,15 +23,20 @@ export async function searchUsers(
     inc: "name,picture,location,email,login,cell",
   });
 
-  const response = await fetch(`${getRandomUserBaseUrl()}?${params}`);
-
-  if (!response.ok) {
-    throw new Error(
-      `Random User API error: ${response.status} ${response.statusText}`,
+  let data: RandomUserApiPayload;
+  try {
+    const client = getAxiosInstance(Environment.RANDOM_USER);
+    // Random User baseURL already points at `/api/`, so path is empty.
+    const res = await client.get<RandomUserApiPayload>(
+      "",
+      getParamsWithConfig(params),
     );
+    data = res.data;
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : "Unknown Random User API error";
+    throw new Error(`Random User API error: ${message}`);
   }
-
-  const data: RandomUserApiPayload = await response.json();
 
   if (data.error) {
     throw new Error(data.error);
