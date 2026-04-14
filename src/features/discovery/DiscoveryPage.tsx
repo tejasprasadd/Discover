@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 
-import { AppShell } from "@/components/layout/AppShell";
-import { PageSection } from "@/components/layout/PageSection";
+import { AppShell } from "@/shadcn-components/layout/AppShell";
+import { PageSection } from "@/shadcn-components/layout/PageSection";
 import { DiscoveryDetailDialog } from "@/features/discovery/components/DiscoveryDetailDialog";
 import { DiscoveryTabsPanel } from "@/features/discovery/components/DiscoveryTabsPanel";
 import { MovieResultsPanel } from "@/features/discovery/components/MovieResultsPanel";

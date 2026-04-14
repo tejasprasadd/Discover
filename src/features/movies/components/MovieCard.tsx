@@ -1,7 +1,7 @@
 import { Calendar, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shadcn-components/ui/card";
 import type { Movie } from "@/types";
 import { cn } from "@/lib/utils";
 
