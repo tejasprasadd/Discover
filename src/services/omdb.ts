@@ -51,7 +51,7 @@ export async function searchMovies(
       rating: 0,
       releaseDate: item.Year,
       overview:
-        "Plot is not included in OMDB search results; open IMDb for full details.",
+        "",
       popularity: 0,
       url: `https://www.imdb.com/title/${item.imdbID}/`,
       metadata: {

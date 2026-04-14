@@ -1,15 +1,15 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { ExternalLink, Loader2, MapPin, Star } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shadcn-components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Skeleton } from "@/components/ui/skeleton";
+} from "@/shadcn-components/ui/dialog";
+import { Skeleton } from "@/shadcn-components/ui/skeleton";
 import { fetchMovieByImdbId } from "@/services/omdb";
 import type { OmdbMovieDetail } from "@/types";
 import type { DiscoveryDetailSelection, Movie, Repository, User } from "@/types";

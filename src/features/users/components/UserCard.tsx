@@ -1,6 +1,6 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shadcn-components/ui/card";
 import type { User } from "@/types";
 import { cn } from "@/lib/utils";
 

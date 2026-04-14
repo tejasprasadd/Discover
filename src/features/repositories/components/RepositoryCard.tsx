@@ -1,6 +1,6 @@
 import { GitFork, Star } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/shadcn-components/ui/card";
 import type { Repository } from "@/types";
 import { cn } from "@/lib/utils";
 

@@ -6,7 +6,7 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/components/ui/tabs";
+} from "@/shadcn-components/ui/tabs";
 import type { DiscoveryTab } from "@/types";
 import { cn } from "@/lib/utils";
 

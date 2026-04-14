@@ -2,7 +2,7 @@ import type { InfiniteData, UseInfiniteQueryResult } from "@tanstack/react-query
 import { useMemo } from "react";
 
 import { RepositoryCard } from "@/features/repositories/components/RepositoryCard";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/shadcn-components/ui/skeleton";
 import type { DiscoveryDetailSelection, Repository } from "@/types";
 
 import { DiscoveryLoadMoreButton } from "./DiscoveryLoadMoreButton";

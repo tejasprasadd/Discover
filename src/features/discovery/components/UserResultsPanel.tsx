@@ -3,8 +3,8 @@ import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 
 import { UserCard } from "@/features/users/components/UserCard";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/shadcn-components/ui/button";
+import { Skeleton } from "@/shadcn-components/ui/skeleton";
 import type { DiscoveryDetailSelection, User } from "@/types";
 
 import { DiscoveryLoadMoreButton } from "./DiscoveryLoadMoreButton";
