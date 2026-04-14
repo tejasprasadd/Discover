@@ -100,7 +100,7 @@ export const SpotlightSearchBar = forwardRef(function SpotlightSearchBar(
         <kbd className="rounded border border-border/80 bg-muted/40 px-1 font-mono text-[10px]">
           Enter
         </kbd>{" "}
-        to search. Query syncs to the URL after you pause typing.
+        to search. Query syncs to the URL when you hit Enter.
       </p>
     </form>
   );
