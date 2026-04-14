@@ -1,6 +1,6 @@
 import type { Movie, OmdbSearchResponse, OmdbMovieDetail } from "@/types";
 import { getOmdbEndpoint, getOmdbApiKey } from "@/utils/getEndpoints";
-
+import { http } from "@/lib/http";
 
 export async function searchMovies(
   query: string,

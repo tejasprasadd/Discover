@@ -1,4 +1,5 @@
 import { Calendar, Star } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Movie } from "@/types";
@@ -11,6 +12,12 @@ type MovieCardProps = {
 };
 
 export function MovieCard({ movie, onSelect, className }: MovieCardProps) {
+  const [imageOk, setImageOk] = useState(Boolean(movie.imageUrl));
+
+  useEffect(() => {
+    setImageOk(Boolean(movie.imageUrl));
+  }, [movie.imageUrl]);
+
   return (
     <button
       type="button"
@@ -22,11 +29,12 @@ export function MovieCard({ movie, onSelect, className }: MovieCardProps) {
     >
       <Card size="sm" className="h-full overflow-hidden shadow-none">
         <div className="relative aspect-[2/3] w-full bg-muted">
-          {movie.imageUrl ? (
+          {movie.imageUrl && imageOk ? (
             <img
               src={movie.imageUrl}
               alt=""
               className="size-full object-cover"
+              onError={() => setImageOk(false)}
             />
           ) : (
             <div className="flex size-full items-center justify-center text-xs text-muted-foreground">

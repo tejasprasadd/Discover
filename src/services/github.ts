@@ -1,6 +1,6 @@
 import type { GitHubSearchResponse, Repository } from "@/types";
 import { getGithubEndpoint, getGithubPat } from "@/utils/getEndpoints";
-
+import { http } from "@/lib/http";
 
 export async function searchRepositories(
   query: string,
@@ -29,15 +29,19 @@ export async function searchRepositories(
     (headers as Record<string, string>).Authorization = `Bearer ${pat}`;
   }
 
-  const response = await fetch(`${getGithubEndpoint()}?${params}`, {
-    headers,
-  });
+  let data: GitHubSearchResponse;
 
-  if (!response.ok) {
-    throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+  try {
+    const res = await http.get<GitHubSearchResponse>(getGithubEndpoint(), {
+      params: Object.fromEntries(params),
+      headers,
+    });
+    data = res.data;
+  } catch (e) {
+    const message =
+      e instanceof Error ? e.message : "Unknown GitHub API error";
+    throw new Error(`GitHub API error: ${message}`);
   }
-
-  const data: GitHubSearchResponse = await response.json();
 
   const items = data.items ?? [];
 

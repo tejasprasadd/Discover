@@ -10,7 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { fetchMovieByImdbId, type OmdbMovieDetail } from "@/services/omdb";
+import { fetchMovieByImdbId } from "@/services/omdb";
+import type { OmdbMovieDetail } from "@/types";
 import type { DiscoveryDetailSelection, Movie, Repository, User } from "@/types";
 
 const movieDetailKey = (imdbID: string) => ["discovery", "movie-detail", imdbID] as const;

@@ -1,18 +1,7 @@
 import type { User } from "@/types";
 import { getRandomUserBaseUrl } from "@/utils/getEndpoints";
 import type { RandomUserApiPayload } from "@/types";
-
-
-const BATCH = 100;
-
-function nameMatchesQuery(query: string, first: string, last: string): boolean {
-  const q = query.trim().toLowerCase();
-  if (!q) return false;
-  const full = `${first} ${last}`.toLowerCase();
-  if (full.includes(q)) return true;
-  const parts = q.split(/\s+/).filter(Boolean);
-  return parts.length > 0 && parts.every((p) => full.includes(p));
-}
+import { BATCH, nameMatchesQuery } from "@/utils/random-user-helpers";
 
 /**
  * Random User Generator has no text search. We fetch a batch and filter by name
