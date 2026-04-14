@@ -1,19 +1,6 @@
 import type { GitHubSearchResponse, Repository } from "@/types";
+import { getGithubEndpoint, getGithubPat } from "@/utils/getEndpoints";
 
-function getGithubEndpoint(): string {
-  const url = process.env.BUN_PUBLIC_GITHUB_ENDPOINT;
-  if (!url?.trim()) {
-    throw new Error(
-      "Missing BUN_PUBLIC_GITHUB_ENDPOINT. Copy .env.example to .env and set it.",
-    );
-  }
-  return url.trim();
-}
-
-function getGithubPat(): string | undefined {
-  const pat = process.env.BUN_PUBLIC_GITHUB_PAT;
-  return pat?.trim() || undefined;
-}
 
 export async function searchRepositories(
   query: string,

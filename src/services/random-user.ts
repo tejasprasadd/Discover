@@ -1,30 +1,7 @@
 import type { User } from "@/types";
+import { getRandomUserBaseUrl } from "@/utils/getEndpoints";
+import type { RandomUserApiPayload } from "@/types";
 
-/** https://randomuser.me/documentation — public API, no key. */
-function getRandomUserBaseUrl(): string {
-  const url = process.env.BUN_PUBLIC_RANDOM_USER_API;
-  if (!url?.trim()) {
-    return "https://randomuser.me/api/";
-  }
-  const trimmed = url.trim();
-  return trimmed.endsWith("/") ? trimmed : `${trimmed}/`;
-}
-
-type RandomUserName = { title: string; first: string; last: string };
-
-type RandomUserRaw = {
-  name: RandomUserName;
-  email: string;
-  cell: string;
-  picture: { large: string; medium: string; thumbnail: string };
-  location: { city: string; country: string; state?: string };
-  login: { username: string; uuid: string };
-};
-
-type RandomUserApiPayload = {
-  results: RandomUserRaw[];
-  error?: string;
-};
 
 const BATCH = 100;
 
@@ -39,7 +16,7 @@ function nameMatchesQuery(query: string, first: string, last: string): boolean {
 
 /**
  * Random User Generator has no text search. We fetch a batch and filter by name
- * so the UX still feels like “search” (PRD optional users source).
+ * so the UX still feels like “search”.
  * `page` maps to the API `page` param for load-more batches.
  */
 export async function searchUsers(

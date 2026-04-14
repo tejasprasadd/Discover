@@ -1,24 +1,6 @@
-import type { Movie, OmdbSearchResponse } from "@/types";
+import type { Movie, OmdbSearchResponse, OmdbMovieDetail } from "@/types";
+import { getOmdbEndpoint, getOmdbApiKey } from "@/utils/getEndpoints";
 
-function getOmdbEndpoint(): string {
-  const url = process.env.BUN_PUBLIC_OMDB_ENDPOINT;
-  if (!url?.trim()) {
-    throw new Error(
-      "Missing BUN_PUBLIC_OMDB_ENDPOINT. Copy .env.example to .env and set it (e.g. https://www.omdbapi.com).",
-    );
-  }
-  return url.trim().replace(/\/$/, "");
-}
-
-function getOmdbApiKey(): string {
-  const key = process.env.BUN_PUBLIC_OMDB_API_KEY;
-  if (!key?.trim()) {
-    throw new Error(
-      "Missing BUN_PUBLIC_OMDB_API_KEY. Copy .env.example to .env and set it.",
-    );
-  }
-  return key.trim();
-}
 
 export async function searchMovies(
   query: string,
@@ -81,28 +63,7 @@ export async function searchMovies(
   };
 }
 
-/** OMDb `i=` response — used for detail view (plot, cast, ratings). */
-export type OmdbMovieDetail = {
-  Title: string;
-  Year: string;
-  Rated: string;
-  Released: string;
-  Runtime: string;
-  Genre: string;
-  Director: string;
-  Writer: string;
-  Actors: string;
-  Plot: string;
-  Language: string;
-  Country: string;
-  Poster: string;
-  imdbRating: string;
-  imdbVotes: string;
-  imdbID: string;
-  Type: string;
-  Response: string;
-  Error?: string;
-};
+
 
 export async function fetchMovieByImdbId(imdbID: string): Promise<OmdbMovieDetail> {
   if (!imdbID.trim()) {

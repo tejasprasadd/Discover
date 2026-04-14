@@ -83,3 +83,43 @@ export interface QueryState {
   page: number;
   activeTab: DiscoveryTab;
 }
+
+export type RandomUserName = { title: string; first: string; last: string };
+
+export type RandomUserRaw = {
+  name: RandomUserName;
+  email: string;
+  cell: string;
+  picture: { large: string; medium: string; thumbnail: string };
+  location: { city: string; country: string; state?: string };
+  login: { username: string; uuid: string };
+};
+
+export type RandomUserApiPayload = {
+  results: RandomUserRaw[];
+  error?: string;
+};
+
+
+/** OMDb `i=` response — used for detail view (plot, cast, ratings). */
+export type OmdbMovieDetail = {
+  Title: string;
+  Year: string;
+  Rated: string;
+  Released: string;
+  Runtime: string;
+  Genre: string;
+  Director: string;
+  Writer: string;
+  Actors: string;
+  Plot: string;
+  Language: string;
+  Country: string;
+  Poster: string;
+  imdbRating: string;
+  imdbVotes: string;
+  imdbID: string;
+  Type: string;
+  Response: string;
+  Error?: string;
+};
