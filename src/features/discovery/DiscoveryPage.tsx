@@ -49,7 +49,7 @@ export function DiscoveryPage() {
       />
 
       <AppShell
-        stickyHeader={false}
+        stickyHeader={true}
         header={
           <PageSection className="pb-4 pt-12 sm:pb-6 sm:pt-16">
             <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
